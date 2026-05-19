@@ -4,19 +4,48 @@
 #include "../../examples/autotest-validate/autotest-validate.h"
 #include "../../assignment-autotest/test/assignment1/username-from-conf-file.h"
 
-/**
-* This function should:
-*   1) Call the my_username() function in Test_assignment_validate.c to get your hard coded username.
-*   2) Obtain the value returned from function malloc_username_from_conf_file() in username-from-conf-file.h within
-*       the assignment autotest submodule at assignment-autotest/test/assignment1/
-*   3) Use unity assertion TEST_ASSERT_EQUAL_STRING_MESSAGE the two strings are equal.  See
-*       the [unity assertion reference](https://github.com/ThrowTheSwitch/Unity/blob/master/docs/UnityAssertionsReference.md)
-*/
-void test_validate_my_username()
+#include <stdio.h>
+#include <string.h>
+//#include "unity.h"
+//#include "autotest-validate.h"
+//#include "username-from-conf-file.h"
+
+// ----------------------------------------------------------------------
+// Test: validate that my_username() returns the correct GitHub username
+// ----------------------------------------------------------------------
+void test_validate_my_username(void)
 {
-    /**
-     * TODO: Replace the line below with your code here as described above to verify your /conf/username.txt 
-     * config file and my_username() functions are setup properly
-     */
-    TEST_ASSERT_TRUE_MESSAGE(false,"AESD students, please fix me!");
+    const char *expected = "patricereneeemery";
+    const char *actual = my_username();
+
+    TEST_ASSERT_NOT_NULL(actual);
+    TEST_ASSERT_EQUAL_STRING(expected, actual);
+}
+
+// ----------------------------------------------------------------------
+// Test: validate that malloc_username_from_conf_file() reads username.txt
+// ----------------------------------------------------------------------
+void test_validate_conf_username(void)
+{
+    const char *expected = "patricereneeemery";
+
+    char *conf_username = malloc_username_from_conf_file();
+
+    TEST_ASSERT_NOT_NULL(conf_username);
+    TEST_ASSERT_EQUAL_STRING(expected, conf_username);
+
+    free(conf_username);
+}
+
+// ----------------------------------------------------------------------
+// Unity test runner
+// ----------------------------------------------------------------------
+int main(void)
+{
+    UNITY_BEGIN();
+
+    RUN_TEST(test_validate_my_username);
+    RUN_TEST(test_validate_conf_username);
+
+    return UNITY_END();
 }
