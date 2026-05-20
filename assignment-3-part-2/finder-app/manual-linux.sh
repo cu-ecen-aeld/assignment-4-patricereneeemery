@@ -103,7 +103,8 @@ sudo mknod -m 666 ${OUTDIR}/rootfs/dev/tty c 5 0
 
 # TODO: Clean and build the writer utility
 cd "${FINDER_APP_DIR}"
-make CROSS_COMPILE=${CROSS_COMPILE}
+make CROSS_COMPILE=${CROSS_COMPILE} -f ${FINDER_APP_DIR}/Makefile
+
 cp writer ${OUTDIR}/rootfs/home/
 
 # REQUIRED: copy writer.sh and ensure it is executable
