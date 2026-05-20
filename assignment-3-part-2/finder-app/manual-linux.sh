@@ -122,8 +122,8 @@ sudo chown -R root:root ${OUTDIR}/rootfs
 # TODO: Create initramfs.cpio.gz
 cd ${OUTDIR}/rootfs
 
-# REQUIRED FIX: create /init so kernel can boot
-cat << 'EOF' > ${OUTDIR}/rootfs/init
+# create /init with correct permissions
+sudo tee ${OUTDIR}/rootfs/init > /dev/null << 'EOF'
 #!/bin/sh
 mount -t proc proc /proc
 mount -t sysfs sys /sys
@@ -135,7 +135,7 @@ sh autorun-qemu.sh
 poweroff -f
 EOF
 
-chmod +x ${OUTDIR}/rootfs/init
+sudo chmod +x ${OUTDIR}/rootfs/init
 
 find . | cpio -H newc -ov --owner root:root > ${OUTDIR}/initramfs.cpio
 gzip -f ${OUTDIR}/initramfs.cpio
