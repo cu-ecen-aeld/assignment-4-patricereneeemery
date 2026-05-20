@@ -38,6 +38,13 @@ if [ ! -e "${OUTDIR}/linux-stable/arch/${ARCH}/boot/Image" ]; then
     # TODO: Add your kernel build steps here
     make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} mrproper
     make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} defconfig
+
+    # REQUIRED FIX: enable initramfs + devtmpfs support
+    ./scripts/config --enable BLK_DEV_INITRD
+    ./scripts/config --enable DEVTMPFS
+    ./scripts/config --enable DEVTMPFS_MOUNT
+    make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} olddefconfig
+
     make -j4 ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} all
     make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} modules
     make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} dtbs
@@ -85,20 +92,8 @@ ${CROSS_COMPILE}readelf -a ${OUTDIR}/rootfs/bin/busybox | grep "program interpre
 ${CROSS_COMPILE}readelf -a ${OUTDIR}/rootfs/bin/busybox | grep "Shared library"
 
 # TODO: Add library dependencies to rootfs
-#SYSROOT=$(${CROSS_COMPILE}gcc -print-sysroot)
-#cp -a ${SYSROOT}/lib/ld-linux-aarch64.so.1 ${OUTDIR}/rootfs/lib/
-#cp -a ${SYSROOT}/lib64/libm.so.6 ${OUTDIR}/rootfs/lib64/
-#cp -a ${SYSROOT}/lib64/libresolv.so.2 ${OUTDIR}/rootfs/lib64/
-#cp -a ${SYSROOT}/lib64/libc.so.6 ${OUTDIR}/rootfs/lib64/
-
-# TODO: Add library dependencies to rootfs
 SYSROOT=$(${CROSS_COMPILE}gcc -print-sysroot)
-#cp -a /usr/aarch64-linux-gnu/lib/ld-linux-aarch64.so.1 ${OUTDIR}/rootfs/lib/
-#cp -a ${SYSROOT}/lib64/libm.so.6 ${OUTDIR}/rootfs/lib64/
-#cp -a ${SYSROOT}/lib64/libresolv.so.2 ${OUTDIR}/rootfs/lib64/
-#cp -a ${SYSROOT}/lib64/libc.so.6 ${OUTDIR}/rootfs/lib64/
 
-# TODO: Add library dependencies to rootfs
 cp -a /usr/aarch64-linux-gnu/lib/ld-linux-aarch64.so.1 ${OUTDIR}/rootfs/lib/
 cp -a /usr/aarch64-linux-gnu/lib/libm.so.6 ${OUTDIR}/rootfs/lib/
 cp -a /usr/aarch64-linux-gnu/lib/libresolv.so.2 ${OUTDIR}/rootfs/lib/
@@ -110,7 +105,6 @@ sudo mknod -m 666 ${OUTDIR}/rootfs/dev/tty c 5 0
 
 # TODO: Clean and build the writer utility
 cd "${FINDER_APP_DIR}"
-#make clean
 make CROSS_COMPILE=${CROSS_COMPILE}
 cp writer ${OUTDIR}/rootfs/home/
 
@@ -127,6 +121,8 @@ sudo chown -R root:root ${OUTDIR}/rootfs
 
 # TODO: Create initramfs.cpio.gz
 cd ${OUTDIR}/rootfs
+
+# REQUIRED FIX: create /init so kernel can boot
 cat << 'EOF' > ${OUTDIR}/rootfs/init
 #!/bin/sh
 mount -t proc proc /proc
