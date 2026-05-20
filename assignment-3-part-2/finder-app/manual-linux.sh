@@ -106,7 +106,7 @@ cd "${FINDER_APP_DIR}"
 make CROSS_COMPILE=${CROSS_COMPILE}
 cp writer ${OUTDIR}/rootfs/home/
 
-#  copy writer.sh (fixes rc=127 error)
+# REQUIRED: copy writer.sh and ensure it is executable
 cp ${FINDER_APP_DIR}/writer.sh ${OUTDIR}/rootfs/home/
 sudo chmod +x ${OUTDIR}/rootfs/home/writer.sh
 
@@ -127,16 +127,23 @@ sudo chown -R root:root ${OUTDIR}/rootfs
 # TODO: Create initramfs.cpio.gz
 cd ${OUTDIR}/rootfs
 
-# REQUIRED: create /init with correct permissions
+# REQUIRED: create /init with correct logic + guaranteed shutdown
 sudo tee ${OUTDIR}/rootfs/init > /dev/null << 'EOF'
 #!/bin/sh
+# Mount essential pseudo‑filesystems needed by BusyBox and the kernel
 mount -t proc proc /proc
 mount -t sysfs sys /sys
 mount -t devtmpfs dev /dev
 
+# TODO: Run the autorun script that triggers the finder tests
 cd /home
 sh autorun-qemu.sh
+RET=$?
 
+# Log the exit code to the kernel message buffer for debugging
+echo "autorun-qemu.sh exited with code $RET" > /dev/kmsg
+
+# TODO: Always power off so QEMU exits cleanly for the autograder
 poweroff -f
 EOF
 
