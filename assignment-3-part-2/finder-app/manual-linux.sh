@@ -108,6 +108,7 @@ cp writer ${OUTDIR}/rootfs/home/
 
 #  copy writer.sh (fixes rc=127 error)
 cp ${FINDER_APP_DIR}/writer.sh ${OUTDIR}/rootfs/home/
+sudo chmod +x ${OUTDIR}/rootfs/home/writer.sh
 
 # TODO: Copy the finder related scripts and executables to the /home directory
 cp ${FINDER_APP_DIR}/finder.sh ${OUTDIR}/rootfs/home/
