@@ -39,7 +39,7 @@ if [ ! -e "${OUTDIR}/linux-stable/arch/${ARCH}/boot/Image" ]; then
     make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} mrproper
     make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} defconfig
 
-    # REQUIRED FIX: enable initramfs + devtmpfs support
+    # REQUIRED: enable initramfs + devtmpfs support
     ./scripts/config --enable BLK_DEV_INITRD
     ./scripts/config --enable DEVTMPFS
     ./scripts/config --enable DEVTMPFS_MOUNT
@@ -92,8 +92,6 @@ ${CROSS_COMPILE}readelf -a ${OUTDIR}/rootfs/bin/busybox | grep "program interpre
 ${CROSS_COMPILE}readelf -a ${OUTDIR}/rootfs/bin/busybox | grep "Shared library"
 
 # TODO: Add library dependencies to rootfs
-SYSROOT=$(${CROSS_COMPILE}gcc -print-sysroot)
-
 cp -a /usr/aarch64-linux-gnu/lib/ld-linux-aarch64.so.1 ${OUTDIR}/rootfs/lib/
 cp -a /usr/aarch64-linux-gnu/lib/libm.so.6 ${OUTDIR}/rootfs/lib/
 cp -a /usr/aarch64-linux-gnu/lib/libresolv.so.2 ${OUTDIR}/rootfs/lib/
@@ -108,13 +106,18 @@ cd "${FINDER_APP_DIR}"
 make CROSS_COMPILE=${CROSS_COMPILE}
 cp writer ${OUTDIR}/rootfs/home/
 
-# TODO: Copy the finder related scripts and executables to the /home directory
-# on the target rootfs
+#  copy writer.sh (fixes rc=127 error)
 cp ${FINDER_APP_DIR}/writer.sh ${OUTDIR}/rootfs/home/
+
+# TODO: Copy the finder related scripts and executables to the /home directory
 cp ${FINDER_APP_DIR}/finder.sh ${OUTDIR}/rootfs/home/
 cp ${FINDER_APP_DIR}/finder-test.sh ${OUTDIR}/rootfs/home/
 cp ${FINDER_APP_DIR}/autorun-qemu.sh ${OUTDIR}/rootfs/home/
+
+# REQUIRED: copy real conf directory (not symlink)
 cp -r ${FINDER_APP_DIR}/conf ${OUTDIR}/rootfs/home/
+
+# Fix path inside finder-test.sh
 sed -i 's|\.\./conf|conf|g' ${OUTDIR}/rootfs/home/finder-test.sh
 
 # TODO: Chown the root directory
@@ -123,7 +126,7 @@ sudo chown -R root:root ${OUTDIR}/rootfs
 # TODO: Create initramfs.cpio.gz
 cd ${OUTDIR}/rootfs
 
-# create /init with correct permissions
+# REQUIRED: create /init with correct permissions
 sudo tee ${OUTDIR}/rootfs/init > /dev/null << 'EOF'
 #!/bin/sh
 mount -t proc proc /proc
