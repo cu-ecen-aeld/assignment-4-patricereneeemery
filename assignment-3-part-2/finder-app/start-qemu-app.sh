@@ -36,4 +36,4 @@ qemu-system-aarch64 \
         -chardev stdio,id=char0,mux=on,logfile=${OUTDIR}/serial.log,signal=off \
         -serial chardev:char0 -mon chardev=char0 \
         -append "console=ttyAMA0" \
-	-initrd ${INITRD_IMAGE}
+        -initrd ${INITRD_IMAGE}
