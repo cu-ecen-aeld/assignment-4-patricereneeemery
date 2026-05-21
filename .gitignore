@@ -1,3 +1,9 @@
+eld/busybox/
+aeld/linux-stable/
+aeld/rootfs/
+aeld/initramfs.cpio
+aeld/initramfs.cpio.gz
+aeld/Image
 *.o
 writer
 Test_*_Runner.c
