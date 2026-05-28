@@ -16,7 +16,7 @@ jobs:
           submodules: recursive
 
       - name: Set BR2_EXTERNAL
-        run: echo "BR2_EXTERNAL=/home/runner/work/assignment-4-patricereneeemery/base_external" >> $GITHUB_ENV
+        run: echo "BR2_EXTERNAL=/home/runner/work/assignment-4-patricereneeemery/assignment-4-patricereneeemery/base_external" >> $GITHUB_ENV
 
       - name: Build Buildroot
         run: |
