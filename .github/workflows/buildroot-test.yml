@@ -1,0 +1,21 @@
+name: Assignment 4 Part 1
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  buildroot-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Build Buildroot
+        run: |
+          cd buildroot
+          make BR2_EXTERNAL=../base_external patrice_defconfig
+          make
