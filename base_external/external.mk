@@ -1,1 +1,1 @@
-# external.mk required by Buildroot external tree
+include $(sort $(wildcard $(BR2_EXTERNAL)/package/*/*.mk))
