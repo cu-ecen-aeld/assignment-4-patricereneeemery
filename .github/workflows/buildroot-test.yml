@@ -15,14 +15,11 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Clean Buildroot output
-        run: rm -rf $GITHUB_WORKSPACE/buildroot/output
-
       - name: Set BR2_EXTERNAL
-        run: echo "BR2_EXTERNAL=$GITHUB_WORKSPACE/base_external" >> $GITHUB_ENV
+        run: echo "BR2_EXTERNAL=$(pwd)/base_external" >> $GITHUB_ENV
 
       - name: Build Buildroot
         run: |
-          cd $GITHUB_WORKSPACE/buildroot
+          cd buildroot
           make aesd_defconfig
           make
