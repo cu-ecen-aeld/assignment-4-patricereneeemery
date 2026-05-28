@@ -20,6 +20,6 @@ jobs:
 
       - name: Build Buildroot
         run: |
-          cd $GITHUB_WORKSPACE/assignment-4-patricereneeemery/buildroot
+          cd $GITHUB_WORKSPACE/buildroot
           make aesd_defconfig
           make
