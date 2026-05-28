@@ -20,6 +20,7 @@ jobs:
 
       - name: Build Buildroot
         run: |
+          export BR2_EXTERNAL=$GITHUB_WORKSPACE/base_external
           cd $GITHUB_WORKSPACE/buildroot
-          make BR2_EXTERNAL=$GITHUB_WORKSPACE/base_external aesd_defconfig
-          make BR2_EXTERNAL=$GITHUB_WORKSPACE/base_external
+          make aesd_defconfig
+          make
