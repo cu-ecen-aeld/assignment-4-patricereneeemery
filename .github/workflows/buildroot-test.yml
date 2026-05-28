@@ -14,15 +14,12 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Debug paths
+      - name: Clean Buildroot output
         run: |
-          echo "GITHUB_WORKSPACE = $GITHUB_WORKSPACE"
-          echo "Directory listing:"
-          ls -R $GITHUB_WORKSPACE
+          rm -rf $GITHUB_WORKSPACE/buildroot/output
 
       - name: Build Buildroot
         run: |
           cd $GITHUB_WORKSPACE/buildroot
-          echo "Using BR2_EXTERNAL=$GITHUB_WORKSPACE/base_external"
           make BR2_EXTERNAL=$GITHUB_WORKSPACE/base_external aesd_defconfig
           make BR2_EXTERNAL=$GITHUB_WORKSPACE/base_external
