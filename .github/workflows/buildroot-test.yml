@@ -17,5 +17,5 @@ jobs:
       - name: Build Buildroot
         run: |
           cd buildroot
-          make BR2_EXTERNAL=../base_external aesd_defconfig
-          make
+          make BR2_EXTERNAL=$GITHUB_WORKSPACE/base_external aesd_defconfig
+          make BR2_EXTERNAL=$GITHUB_WORKSPACE/base_external
