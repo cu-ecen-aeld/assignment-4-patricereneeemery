@@ -1,8 +1,3 @@
-[submodule "buildroot"]
-    path = buildroot
-    url = https://github.com/buildroot/buildroot.git
-
-[submodule "base_external"]
-    path = base_external
-    url = https://github.com/cu-ecen-aeld/base_external.git
-
+[submodule "assignment-autotest"]
+	path = assignment-autotest
+	url = https://github.com/cu-ecen-5013/assignment-autotest

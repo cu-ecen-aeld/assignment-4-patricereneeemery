@@ -1,16 +1,16 @@
 #!/bin/bash
-set -e
+#Script to save the modified configuration as modified_qemu_aarch64_virt_defconfig and linux kernel configuration.
+#Author: Siddhant Jajoo.
 
-TOPDIR="$(cd "$(dirname "$0")" && pwd)"
-cd "$TOPDIR"
+cd `dirname $0`
+source shared.sh
+mkdir -p base_external/configs/
+make -C buildroot savedefconfig BR2_DEFCONFIG=${AESD_MODIFIED_DEFCONFIG_REL_BUILDROOT}
 
-CONFIG_SRC="buildroot/.config"
-CONFIG_DST="conf/aesd_buildroot_defconfig"
-
-if [ ! -f "$CONFIG_SRC" ]; then
-    echo "No buildroot .config found. Run ./build.sh first."
-    exit 1
+if [ -e buildroot/.config ] && [ ls buildroot/output/build/linux-*/.config 1> /dev/null 2>&1 ]; then
+	grep "BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE" buildroot/.config > /dev/null
+	if [ $? -eq 0 ]; then
+		echo "Saving linux defconfig"
+		make -C buildroot linux-update-defconfig
+	fi
 fi
-
-cp "$CONFIG_SRC" "$CONFIG_DST"
-echo "Saved config to $CONFIG_DST"
