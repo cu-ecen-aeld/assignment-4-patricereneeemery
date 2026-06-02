@@ -1,5 +1,0 @@
-menu "External packages"
-
-source "$BR2_EXTERNAL/package/aesd-assignments/Config.in"
-
-endmenu
