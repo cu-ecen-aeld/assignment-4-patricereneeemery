@@ -16,15 +16,16 @@ jobs:
         submodules: recursive
 
     - name: Set BR2_EXTERNAL
-      run: echo "BR2_EXTERNAL=/home/runner/work/assignment-4-patricereneeemery/base_external" >> $GITHUB_ENV
+      run: echo "BR2_EXTERNAL=${{ github.workspace }}/base_external" >> $GITHUB_ENV
 
     - name: Build Buildroot
       run: |
-        cd /home/runner/work/assignment-4-patricereneeemery/buildroot
+        cd ${{ github.workspace }}/buildroot
         make aesd_defconfig
         make
 
     - name: Run tests
       run: |
-        cd /home/runner/work/assignment-4-patricereneeemery/assignment-autotest
+        cd ${{ github.workspace }}/assignment-autotest
         ./run-tests.sh
+
