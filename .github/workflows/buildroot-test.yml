@@ -1,25 +1,30 @@
-name: buildroot-test
+name: Buildroot Test
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'assignment-4-part-1*'
 
 jobs:
-  buildroot-test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
 
-      - name: Set BR2_EXTERNAL
-        run: echo "BR2_EXTERNAL=/home/runner/work/assignment-4-patricereneeemery/assignment-4-patricereneeemery/base_external" >> $GITHUB_ENV
+    - name: Set BR2_EXTERNAL
+      run: echo "BR2_EXTERNAL=/home/runner/work/assignment-4-patricereneeemery/base_external" >> $GITHUB_ENV
 
-      - name: Build Buildroot
-        run: |
-          cd /home/runner/work/assignment-4-patricereneeemery/assignment-4-patricereneeemery/buildroot
-          make aesd_defconfig
-          make
+    - name: Build Buildroot
+      run: |
+        cd /home/runner/work/assignment-4-patricereneeemery/buildroot
+        make aesd_defconfig
+        make
+
+    - name: Run tests
+      run: |
+        cd /home/runner/work/assignment-4-patricereneeemery/assignment-autotest
+        ./run-tests.sh
