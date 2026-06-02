@@ -1,3 +1,13 @@
 #!/bin/bash
-# Wrapper for Assignment 4 Part 1 tests
-exec ./assignment-autotest/test/assignment4/assignment4-part1.sh
+# Run unit tests for the assignment
+
+# Automate these steps from the readme:
+# Create a build subdirectory, change into it, run
+# cmake .. && make && run the assignment-autotest application
+mkdir -p build
+cd build
+cmake ..
+make clean
+make
+cd ..
+./build/assignment-autotest/assignment-autotest
