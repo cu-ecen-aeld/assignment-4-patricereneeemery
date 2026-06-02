@@ -1,1 +1,5 @@
-source "$BR2_EXTERNAL/package/Config.in"
+menu "AESD custom packages"
+
+source "$BR2_EXTERNAL/package/aesdsocket/Config.in"
+
+endmenu
