@@ -25,3 +25,4 @@ jobs:
       run: |
         cd ${{ github.workspace }}/assignment-autotest
         ./run-tests.sh
+
