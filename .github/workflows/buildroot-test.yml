@@ -1,28 +1,27 @@
-name: Buildroot Test
+name: assignment-4-part-1
 
 on:
   push:
-    tags:
-      - 'assignment-4-part-1*'
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-      with:
-        submodules: recursive
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
-    - name: Build Buildroot
-      run: |
-        cd ${{ github.workspace }}/buildroot
-        BR2_EXTERNAL=${{ github.workspace }}/base_external make aesd_defconfig
-        BR2_EXTERNAL=${{ github.workspace }}/base_external make
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential gcc make
 
-    - name: Run tests
-      run: |
-        cd ${{ github.workspace }}/assignment-autotest
-        ./run-tests.sh
-
+      - name: Run unit tests for Assignment 4 Part 1
+        run: |
+          chmod +x unit-test.sh
+          ./unit-test.sh
