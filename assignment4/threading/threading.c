@@ -7,21 +7,22 @@
 //#define DEBUG_LOG(msg,...) printf("threading: " msg "\n" , ##__VA_ARGS__)
 #define ERROR_LOG(msg,...) printf("threading ERROR: " msg "\n" , ##__VA_ARGS__)
 
+
 void* threadfunc(void* thread_param)
 {
     struct thread_data* thread_func_args = (struct thread_data *) thread_param;
 
-    if (!thread_func_args) {
-        return thread_param;
+    if (thread_func_args == NULL) {
+        return NULL;
     }
 
-    // Initial wait before attempting to obtain the mutex
+    // Sleep before attempting to obtain the mutex
     usleep(thread_func_args->wait_to_obtain_ms * 1000);
 
     // Attempt to lock the mutex
     if (pthread_mutex_lock(thread_func_args->mutex) != 0) {
         thread_func_args->thread_complete_success = false;
-        return thread_param;
+        return thread_func_args;
     }
 
     // Hold the mutex
@@ -30,14 +31,15 @@ void* threadfunc(void* thread_param)
     // Unlock the mutex
     if (pthread_mutex_unlock(thread_func_args->mutex) != 0) {
         thread_func_args->thread_complete_success = false;
-        return thread_param;
+        return thread_func_args;
     }
 
     // Success
     thread_func_args->thread_complete_success = true;
 
-    return thread_param;
+    return thread_func_args;
 }
+
 
 bool start_thread_obtaining_mutex(pthread_t *thread, pthread_mutex_t *mutex,
                                   int wait_to_obtain_ms, int wait_to_release_ms)
