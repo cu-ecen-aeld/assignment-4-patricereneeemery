@@ -1,0 +1,27 @@
+name: assignment-4-part-1
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential gcc make
+
+      - name: Run unit tests for Assignment 4 Part 1
+        run: |
+          chmod +x unit-test.sh
+          ./unit-test.sh
