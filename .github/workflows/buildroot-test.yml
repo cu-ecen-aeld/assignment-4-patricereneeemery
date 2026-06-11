@@ -1,27 +1,27 @@
-name: assignment-4-part-1
-
+name: assignment-4-part-2
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
+    push:
+        tags-ignore:
+            - '*'
+        branches:
+            - '*'
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
-
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential gcc make
-
-      - name: Run unit tests for Assignment 4 Part 1
-        run: |
-          chmod +x unit-test.sh
-          ./unit-test.sh
+    full-test:
+        container: cuaesd/aesd-autotest:24-assignment4-buildroot
+        runs-on: self-hosted
+        timeout-minutes: 120
+        steps:
+          - uses: actions/checkout@v2
+          - name: Checkout submodules
+            run: git submodule update --init --recursive
+          - uses: webfactory/ssh-agent@v0.5.3
+            with:
+                ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          - name: Run full test
+            env:
+              GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
+            run: ./full-test.sh
+          - name: Cleanup
+            if: always()
+            run: |
+              ssh-add -D
